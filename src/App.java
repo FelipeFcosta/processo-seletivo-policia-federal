@@ -7,7 +7,6 @@ import java.util.stream.IntStream;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        
         Scanner input = new Scanner(System.in);
 
         int N = input.nextInt();
@@ -39,25 +38,32 @@ public class App {
     }
 
 
-    public static Set<Set<Integer>> getSubsetsContainingAnotherSubset(int[] set, ArrayList<ArrayList<Integer>> pairs) {
+    /**
+    * obtem subconjunto a partir do {@code set} de forma a conter um outro {@code subset}
+    *
+    * @param  set    conjunto original
+    * @param  subset deve conter conjuntos que pertencam ao {@code set}
+    * @return um novo subconjunto contendo elementos que englobam os elementos do {@code subset}
+    */
+    public static Set<Set<Integer>> getSubsetsContainingAnotherSubset(int[] set, ArrayList<ArrayList<Integer>> subset) {
         Set<Set<Integer>> subsetsContainingAnotherSubset = new HashSet<>();   // sanduiches que nao podem ser feitos
         int numberOfSubsets = (1 << set.length);             // quantidade de subconjuntos = 2^(tamanho do conjunto)
         
         // utilizar a sequencia de numeros binarios para iterar sobre todos os subsets possiveis (se N=3: 000, 001, 010, 011, ...)
         for (int i = 0; i < numberOfSubsets; i++) {
             // formar um subset
-            Set<Integer> subset = new HashSet<>();
+            Set<Integer> newSubset = new HashSet<>();
             for (int j = 0; j < set.length; j++) {
                 // adicionar o j-esimo elemento do set ao subset se apos deslocar j vezes para a direita o numero for impar
                 if ((1 & (i >> j)) == 1) {
-                    subset.add(set[j]);
+                    newSubset.add(set[j]);
                 }
             }
             // adicionar o subset aos subsets de sanduiches que nao podem ser feitos
             // apenas se um dos pares esta contido no subset
-            for (ArrayList<Integer> pair : pairs) {
-                if (subset.containsAll(pair)) {
-                    subsetsContainingAnotherSubset.add(subset);
+            for (ArrayList<Integer> pair : subset) {
+                if (newSubset.containsAll(pair)) {
+                    subsetsContainingAnotherSubset.add(newSubset);
                 }
             }
         }
